@@ -1,0 +1,35 @@
+
+# ruff cli usage with pyproject.thom for lint and format
+# lint and fix  : ruff check . --fix --verbose
+# format fix    : ruff format . --verbose
+# 
+[tool.ruff]
+line-length = 120
+indent-width = 4
+target-version = "py312"
+
+# include jupyter notebook
+extend-include = ["*.ipynb"]
+exclude = ["__pycache__", ".ipynb_checkpoints"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+
+# mypy cli usage with pyproject.toml for static type check
+# mypy . --verbose
+# 
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+ignore_missing_imports = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+strict_optional = true
