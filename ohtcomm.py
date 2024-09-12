@@ -291,7 +291,10 @@ def save_csvfile(df: pd.DataFrame, filename: str, adir: str) -> None:
                 line += 1
                 for col in conf.COLUMN_NAMES:
                     if col == conf.COLUMN_NAMES[0]:
-                        of.write(row[col].strftime(conf.DATE_FORMAT)[:-3])
+                        if conf.DATETM_INCLUDE:
+                            of.write(row[col].strftime(conf.DATE_FORMAT)[:-3])
+                        else:
+                            pass
                     elif col in conf.COLUMN_TEM + conf.COLUMN_CTA:
                         of.write(",{:.1f}".format(row[col]))
                     elif col in conf.COLUMN_PMA + conf.COLUMN_COA:
@@ -417,9 +420,9 @@ def gen_outlier(df: pd.DataFrame, usestd: bool = False) -> pd.DataFrame:
 
     update_row = update_row_outer(df)  # closure
 
-    dfoutl = df.apply(update_row, axis=1)
+    df = df.apply(update_row, axis=1)
 
-    return dfoutl
+    return df
 
 
 # eof

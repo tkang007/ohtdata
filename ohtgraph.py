@@ -135,7 +135,7 @@ def linechart(
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
-            dpi=conf.DPI_FILE,
+            dpi=conf.DPI,
             facecolor="w",
             edgecolor="w",
             orientation="portrait",
@@ -191,7 +191,7 @@ def histchart(
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
-            dpi=conf.DPI_FILE,
+            dpi=conf.DPI,
             facecolor="w",
             edgecolor="w",
             orientation="portrait",
@@ -239,7 +239,7 @@ def boxchart(
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
-            dpi=conf.DPI_FILE,
+            dpi=conf.DPI,
             facecolor="w",
             edgecolor="w",
             orientation="portrait",
@@ -286,7 +286,7 @@ def violinchart(
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
-            dpi=conf.DPI_FILE,
+            dpi=conf.DPI,
             facecolor="w",
             edgecolor="w",
             orientation="portrait",

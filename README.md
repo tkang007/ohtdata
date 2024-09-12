@@ -39,9 +39,10 @@ mkdir sample && mkdir sample\dataraw
 ## project files
 ```
 .gitignore
+codecheck.bat
+pyproject.toml 
 README.md
 requirements.txt
-codecheck.bat
 
 ohtconf.py
 ohtcomm.py
@@ -54,7 +55,7 @@ sample/dataraw
 ```
 ## code lint, format and static type check
 
-codecheck.bat 
+codecheck.bat  - use ruff, mypy with pyproject.toml config file.
 
 ## start jupyter lab
 jupyter lab 

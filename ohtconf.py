@@ -126,8 +126,16 @@ FILENAME_OUTL = TABNAME_OUTL + ".csv"  # outlier
 # parsing
 DBFILE_RECREATE = True  # flag for recreating dbfile. True when change input data or its scope.
 
-INPUT_MAXSIZE = 400 * 1024 * 1024  # parsed csvfile max size as expected normal data 400
-REPORT_MINSIZE = 500 * 1024 * 1024  # report files (normal, 374MB + outlier, 126 MBfor INPUT_MAXSIZE = 400MB)
+DATETM_INCLUDE = True  # include or exclude datetm column oon the output report csvfile.
+
+if DATETM_INCLUDE:  #
+    INPUT_MAXSIZE = 400 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
+else:
+    INPUT_MAXSIZE = 650 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
+
+REPORT_MINSIZE = 500 * 1024 * 1024  # required output csvfiles (normal+outler) size.
+# report files (normal, 374MB + outlier, 126 MBfor INPUT_MAXSIZE = 400MB, when include DATETM in output csvfile)
+# report files (normal, 380MB + outlier, 128 MBfor INPUT_MAXSIZE = 6500MB, when exclude DATETM in output csvfile)
 
 SKIP_FILES = 0  # skip files in the dataset dir in filename order. 0 or None for no skip
 LIMIT_FILES = 0  # limit files in the dataset dir in filename order. 0 or None for no limit
@@ -165,8 +173,6 @@ COLUMN_FLAG = "FLAG"  # flag column to mark noise and outler row
 
 # output file
 
-DATETM_INCLUDE = True  # include or exclude datetm column oon the final report csvfile.
-
 CSVFILE_LINES = 36_000  # as much as input file line count
 assert CSVFILE_LINES > 0, f"conf, CSVFILE_LINES={CSVFILE_LINES} invalid"
 
@@ -182,17 +188,11 @@ BINS = 10  # histogram bins
 
 COLORS = ["red", "blue", "green", "yellow", "orange", "purple", "black", "gray", "pink", "brown"]  # 10 colors in a plot
 
-# PLOTSIZE_SCREEN = [10, 6]  # recommended plotsize on the notbook.  width, height in pixel
-PLOTSIZE_SCREEN = [7, 5]  # recommended plotsize on the notbook.  width, height in pixel
-DPI_SCREEN = 100  # default dpi of notebook
+# PLOTSIZE = [10, 6]  # recommended plotsize on the notbook.  width, height in pixel
+# DPI = 100  # default dpi of notebook
 
-PLOTSIZE_FILE = [7, 5]  # recommended plotsize on the file for document.
-DPI_FILE = 300  # recommended DPI, density per inch on the file for document.
-
-SAVEFIG = False  # plot saving to file or not
-
-PLOTSIZE = PLOTSIZE_FILE if SAVEFIG else PLOTSIZE_SCREEN
-DPI = DPI_FILE if SAVEFIG else DPI_SCREEN
+PLOTSIZE = [7, 5]  # recommended plotsize on the notbook.  width, height in pixel
+DPI = 300  # recommended DPI, density per inch on the file for document.
 
 # etc
 VERBOSE = True
