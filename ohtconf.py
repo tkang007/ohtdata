@@ -8,7 +8,7 @@ import numpy as np
 #
 # basic config
 #
-if 1 == 1:  # dev
+if 1 == 0:  # dev
     DIRRAW = r".\sample\dataraw"
     DIROUT = r".\sample\dataout"
 else:  # prod
@@ -126,7 +126,7 @@ FILENAME_OUTL = TABNAME_OUTL + ".csv"  # outlier
 # parsing
 DBFILE_RECREATE = True  # flag for recreating dbfile. True when change input data or its scope.
 
-DATETM_INCLUDE = True  # include or exclude datetm column oon the output report csvfile.
+DATETM_INCLUDE = False  # include or exclude datetm column oon the output report csvfile.
 
 if DATETM_INCLUDE:  #
     INPUT_MAXSIZE = 400 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,

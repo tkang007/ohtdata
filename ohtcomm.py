@@ -296,7 +296,10 @@ def save_csvfile(df: pd.DataFrame, filename: str, adir: str) -> None:
                         else:
                             pass
                     elif col in conf.COLUMN_TEM + conf.COLUMN_CTA:
-                        of.write(",{:.1f}".format(row[col]))
+                        if not conf.DATETM_INCLUDE and col == conf.COLUMN_TEM[0]:
+                            of.write("{:.1f}".format(row[col]))
+                        else:
+                            of.write(",{:.1f}".format(row[col]))
                     elif col in conf.COLUMN_PMA + conf.COLUMN_COA:
                         of.write(",{:d}".format(row[col]))
 
