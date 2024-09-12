@@ -37,10 +37,11 @@ mkdir sample && mkdir sample\dataraw
 ```
 
 ## project files
-
+```
 .gitignore
 README.md
 requirements.txt
+codecheck.bat
 
 ohtconf.py
 ohtcomm.py
@@ -50,9 +51,7 @@ oht2output.ipynb
 oht3graph.ipynb 
 
 sample/dataraw   
-
-codecheck.bat
-
+```
 ## code lint, format and static type check
 
 codecheck.bat 
@@ -64,17 +63,21 @@ jupyter lab
 - check ohtconf.py  -  DIRRAW for raw csvfile location 
 
 - run notebooks in this order
+```
 oht1parse.ipynb - parse raw csvfile and save them to duckdb ohtraw table 
 oht2output.ipynb - read duckdb ohtraw table, generate noise,normal,outlier csvfiles and duckdb tables 
 oht3graph.ipynb - read duckdb ohtraw, ohtnoise, ohtnorm, ohtoutl tables and generate chart image files 
+```
 
 - find notebook output files in DIROUT foler
-
+```
 sample/dataout/ohtnoise/ohtnoise-NNN.csv - noise data
 sample/dataout/ohtnorm/ohtnorm-NNN.csv - normal data
 sample/dataout/ohtoutl/ohtoutl-NNN.csv - outlier data
 
 sample/dataout/ohtchart/*.png -  chart image files 
-
+```
 - find duckdb file
+```
 sample/sample.duckdb 
+```
