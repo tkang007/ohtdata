@@ -40,45 +40,62 @@ mkdir sample && mkdir sample\dataraw
 ```
 .gitignore
 codecheck.bat
-pyproject.toml 
+coderun.bat
+example
+oht1parse.ipynb
+oht2output.ipynb
+oht3graph.ipynb
+ohtcomm.py
+ohtconf.py
+ohtgraph.py
+pyproject.toml
 README.md
 requirements.txt
+sample/
 
-ohtconf.py
-ohtcomm.py
-ohtgraph.py
-oht1parse.ipynb 
-oht2output.ipynb
-oht3graph.ipynb 
-
-sample/dataraw   
 ```
-## code lint, format and static type check
+## code check - lint, format and static type check
 
 codecheck.bat  - use ruff, mypy with pyproject.toml config file.
 
-## start jupyter lab
+## run notebook at browser
+```
 jupyter lab 
 
-## run jupyter notebooks 
-- check ohtconf.py  -  DIRRAW for raw csvfile location 
+# check ohtconf.py  -  DIRRAW for raw csvfile location 
 
-- run notebooks in this order
-```
+# run notebooks in this order
+
 oht1parse.ipynb - parse raw csvfile and save them to duckdb ohtraw table 
 oht2output.ipynb - read duckdb ohtraw table, generate noise,normal,outlier csvfiles and duckdb tables 
 oht3graph.ipynb - read duckdb ohtraw, ohtnoise, ohtnorm, ohtoutl tables and generate chart image files 
-```
 
-- find notebook output files in DIROUT foler
-```
+
+# find notebook output files in DIROUT folder
+
 sample/dataout/ohtnoise/ohtnoise-NNN.csv - noise data
 sample/dataout/ohtnorm/ohtnorm-NNN.csv - normal data
 sample/dataout/ohtoutl/ohtoutl-NNN.csv - outlier data
 
 sample/dataout/ohtchart/*.png -  chart image files 
-```
-- find duckdb file
-```
+
+# duckdb file, shared between notebooks
+
 sample/sample.duckdb 
 ```
+
+## run notebook at command prompt, cmd.exe
+result notebooks in .\tmp\notebook-HHMMSS.ipynb 
+result data files is same with browser use case.
+```
+# run 3 notebooks
+coderun.bat   
+
+# run 3 notebooks with DIRFLAG=large variable for large datafiles, see ohtconf.py 
+set DIRFLAG=large
+coderun.bat   
+
+# run 1 notebook, use arg1 with  parse or output or graph
+coderun.bat parse
+```
+

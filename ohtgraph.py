@@ -111,9 +111,10 @@ def linechart(
     for ic, (col, ax) in enumerate(zip(cols, axs)):
         for ik, df in enumerate(dfs):
             ax.plot(
-                range(1, len(df) + 1), df[col], color=conf.COLORS[ik % len(conf.COLORS)], label=labels[ik] + "_" + col
+                range(1, len(df) + 1), df[col], color=conf.COLORS[ik % len(conf.COLORS)], label=labels[ik] + "-" + col
             )
-        ax.set_ylim(low, hig)
+        if col not in conf.COLUMN_COA:  # too difference range between CO and NH3
+            ax.set_ylim(low, hig)
         ax.set_ylabel(col)
         ax.set_xlabel("0.1 sec")
         ax.set_title(col)

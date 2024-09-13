@@ -66,7 +66,7 @@ def read_csvfile(csvfile: str) -> tuple[pd.DataFrame | None, list[tuple[int, str
         reference conf constant, COLUMN_NAMES, COLUMN_TYPES, DATE_FORMAT
         manual parsing as csv, pandas failed on the dtype convert error
 
-        COLUMN_NAMES = ["DATETM",       "TEMPER",     "PM1",    "PM2_5",   "PM10",  "CO",     "NH3",    "CT1",      "CT2",      "CT3",       "CT4"]
+        COLUMN_NAMES = ["DATETM",       "TEM",     "PM1",    "PM2_5",   "PM10",  "CO",     "NH3",    "CT1",      "CT2",      "CT3",       "CT4"]
         COLUMN_TYPES = [datetime.datetime, np.float32, np.int16, np.int16, np.int16, np.int16, np.int16, np.float32, np.float32, np.float32, np.float32]
         ex data:  2024-07-29 09:43:18:696, 40.8,       10,       12,       13,       161,      88,       0.8,        1,          0.5,        0.6
     """

@@ -1,6 +1,7 @@
 # filename: ohtconf.py
 # purpose: configuration
 
+import os
 import datetime
 import pathlib
 import numpy as np
@@ -8,7 +9,8 @@ import numpy as np
 #
 # basic config
 #
-if 1 == 0:  # dev
+_dirflag = os.getenv("DIRFLAG", "small")
+if _dirflag == "small":
     DIRRAW = r".\sample\dataraw"
     DIROUT = r".\sample\dataout"
 else:  # prod
@@ -19,7 +21,7 @@ assert pathlib.Path(DIRRAW).exists(), f"conf, DIRRAW={DIRRAW} dir not exist"
 
 FILENAME_PATTERN = "afpLog_????-??-??_??????.csv"  # afpLog_2024-05-29_091339.csv
 
-COLUMN_TEM = ["TEMPER"]
+COLUMN_TEM = ["TEM"]
 
 COLUMN_PMA = ["PM1", "PM2_5", "PM10"]  # group of PM*, dtype=int
 
@@ -30,7 +32,7 @@ COLUMN_CTA = ["CT1", "CT2", "CT3", "CT4"]  # group of CT*
 COLUMN_GRAPH = COLUMN_TEM + COLUMN_PMA + COLUMN_COA + COLUMN_CTA
 
 # ex data:2024-07-29 09:43:18:696, 40.8,  10,   12,     13,    161,  88,    0.8,   1,     0.5,   0.6
-# COLUMN_NAMES = ["DATETM",   "TEMPER","PM1","PM2_5","PM10", "CO", "NH3", "CT1", "CT2", "CT3", "CT4"]
+# COLUMN_NAMES = ["DATETM",   "TEM","PM1","PM2_5","PM10", "CO", "NH3", "CT1", "CT2", "CT3", "CT4"]
 COLUMN_NAMES = ["DATETM"] + COLUMN_GRAPH
 
 COLUMN_TYPES = [
@@ -66,7 +68,7 @@ FLOAT_FORMAT = "%.1f"  # 1 digit after period
 
 # """Sample data statics to determine column max value:
 
-#         DATETM                        TEMPER    PM1       PM2_5     PM10      CO        NH3       CT1       CT2       CT3       CT4
+#         DATETM                        TEM       PM1       PM2_5     PM10      CO        NH3       CT1       CT2       CT3       CT4
 # count    360000                       360000.0  360000.0  360000.0  360000.0  360000.0  360000.0  360000.0  360000.0  360000.0  360000.0
 # mean    2024-07-29 14:43:18.669020    40.7      10.9      12.3      13.6      160.3     88.5      0.9       1.0       0.5       0.5
 # min     2024-07-29 09:43:18.696000    40.3       9.0      11.0      12.0      112.0     70.0      0.6       0.8       0.3       0.3
@@ -80,7 +82,7 @@ FLOAT_FORMAT = "%.1f"  # 1 digit after period
 MAXVALS: dict[str, np.int16 | np.float32] = dict()
 for col in COLUMN_GRAPH:
     match col:
-        case "TEMPER":
+        case "TEM":
             MAXVALS[col] = np.float32(50.0)
 
         case "PM1":
@@ -126,7 +128,7 @@ FILENAME_OUTL = TABNAME_OUTL + ".csv"  # outlier
 # parsing
 DBFILE_RECREATE = True  # flag for recreating dbfile. True when change input data or its scope.
 
-DATETM_INCLUDE = False  # include or exclude datetm column oon the output report csvfile.
+DATETM_INCLUDE = True  # include or exclude datetm column oon the output report csvfile.
 
 if DATETM_INCLUDE:  #
     INPUT_MAXSIZE = 400 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
