@@ -26,12 +26,13 @@ time /t
 if "%1"=="" (
     :: jupyter nbconvert --to notebook --execute oht1parse.ipynb  --output .\tmp\oht1parse-%NAMEPART%.ipynb
     papermill oht1parse.ipynb  .\tmp\oht1parse-%NAMEPART%.ipynb
-
+    
     time /t
     papermill oht2output.ipynb .\tmp\oht2output-%NAMEPART%.ipynb
 
     time /t
     papermill oht3graph.ipynb  .\tmp\oht3graph-%NAMEPART%.ipynb
+    jupyter nbconvert --to html .\tmp\oht3graph-%NAMEPART%.ipynb
 ) else (
     if "%1"=="parse" (
         papermill oht1parse.ipynb  .\tmp\oht1parse-%NAMEPART%.ipynb
@@ -41,13 +42,17 @@ if "%1"=="" (
         ) else (
             if "%1"=="graph" (
                 papermill oht3graph.ipynb  .\tmp\oht3graph-%NAMEPART%.ipynb
+                jupyter nbconvert --to html .\tmp\oht3graph-%NAMEPART%.ipynb
             ) else (
-                echo "Invalud arg, support parse,output or graph"
-                exit /b 1
+                if "%1"=="clear" (
+                    jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace *.ipynb
+                ) else (
+                    echo "Invalud arg, support parse,output or graph"
+                    exit /b 1
+                )
             )
         )
     )
-
 )
 time /t
 
