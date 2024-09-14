@@ -380,11 +380,11 @@ def update_row_outer(df: pd.DataFrame, usestd: bool = False) -> Any:
         # nonlocal des # not assign, but reference
 
         repidx, patidx = divmod(row.name, conf.POINTS["PATTERN"])  # default index, 50
-        if patidx == 0:
-            patkind = random.randint(0, repidx)
+        if patidx == 0 or len(sequences) == 0:  # as row.name is logical index
+            patkind = random.randint(0, repidx)  # random patten order
             for colidx, col in enumerate(conf.COLUMN_GRAPH):  # use moving avg,std for row
                 if usestd:  # when use stddev
-                    if row[conf.MVSTD + col] == 0:  # note: it happed
+                    if row[conf.MVSTD + col] == 0:  # note: it happened
                         stddev = des.loc["std", col]
                     else:
                         stddev = row[conf.MVSTD + col]
