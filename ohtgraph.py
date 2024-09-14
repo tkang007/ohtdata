@@ -155,7 +155,7 @@ def histchart(
     title: str | None = None,
     pngfile: str | None = None,
 ) -> None:
-    """display and save hist chart"""
+    """display and save histogram chart"""
 
     dfs, labels, cols, grid, title, figsize = make_chartargs("histogram", dfs, labels, cols, grid, title)
 
@@ -259,7 +259,7 @@ def violinchart(
     title: str | None = None,
     pngfile: str | None = None,
 ) -> None:
-    """display and save box chart"""
+    """display and save violin chart"""
     dfs, labels, cols, grid, title, figsize = make_chartargs("violinplot", dfs, labels, cols, grid, title)
 
     low, hig = calc_lowhigh(dfs, cols)
@@ -277,6 +277,56 @@ def violinchart(
         ax.set_xticks([x + 1 for x in range(len(labels))])
         ax.set_xticklabels(labels)
         ax.set_title(col)
+
+    fig.suptitle(title)
+
+    plt.tight_layout()
+    plt.show()
+
+    if pngfile is not None:
+        filepath = pathlib.Path(conf.DIRCHART) / pngfile
+        fig.savefig(
+            filepath,
+            dpi=conf.DPI,
+            facecolor="w",
+            edgecolor="w",
+            orientation="portrait",
+            format=None,
+            transparent=False,
+            bbox_inches=None,
+            pad_inches=None,
+        )
+
+
+def scatterchart(
+    df: pd.DataFrame,
+    cols: list[str],
+    title: str | None = None,
+    pngfile: str | None = None,
+) -> None:
+    """display and save scatter chart
+
+    Args:
+    df pd.DataFrame - a dataframe which has two column in cols
+    cols list[str] - 2 column names in df
+    title str - tilte of chart
+    pngfile str - png filename
+    """
+    assert isinstance(df, pd.DataFrame), "scatterplot, the first arg, df must be dataframe"
+    assert len(cols) == 2, "scatterplot, second arg, cols must have 2 column names"
+
+    if title is None:
+        title = "Data Correation with " + "Scatter chart"
+
+    figsize = conf.PLOTSIZE
+
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+
+    # Create a scatter plot using the DataFrame
+    ax.scatter(data=df, x=cols[0], y=cols[1], marker="o", color=conf.COLORS[1])
+    ax.set_xlabel(cols[0])
+    ax.set_ylabel(cols[1])
+    ax.set_title(" & ".join(cols))
 
     fig.suptitle(title)
 
