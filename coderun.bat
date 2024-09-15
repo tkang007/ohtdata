@@ -1,12 +1,18 @@
 
-
-:: run jupyer notebooks 
 ::
-:: DIRFLAG={small | large}  used to control DIRRAW,DIROUT location. default=small
-:: Please set DIRFLAG=large at command prompt to use large dataset
-:: set DIRFLAG=large
-:: Please unset DIRFLAG at command prompt to not use large dataset
-:: set DIRFLAG
+:: run juptyer notebooks 
+::
+:: uage: coderun.bat [ {parse | output | graph | clear }]
+::    each arg depend on the previos arg result, duckdb file.
+::    clear arg for clear cell output before git add file
+::
+:: environment variables:
+::   DIRFLAG={small | large}  used to control DIRRAW,DIROUT location. default=small
+::     small for using .\sample folder which defined at ohtconf.py
+::     large for using other folder which defined at ohtconf.py  
+::     use "set DIRFLAG=large" command before run this script.
+::     use "set DIRFLAG=" command to unset this flag.
+::
 
 echo Current DIRFLAG variable value %DIRFLAG%
 
