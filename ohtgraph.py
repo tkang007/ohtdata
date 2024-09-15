@@ -187,7 +187,7 @@ def histchart(
 
     for ic, (col, ax) in enumerate(zip(cols, axs)):
         for ik, df in enumerate(dfs):
-            ax.hist(df[col], color=conf.COLORS[ik % len(conf.COLORS)], label=labels[ik], bins=conf.BINS)
+            ax.hist(df[col], color=conf.COLORS[ik % len(conf.COLORS)], label=labels[ik], bins=conf.BINS, alpha=0.5)
         ax.set_ylabel("Frequency")
         # ax.set_xlim(low,hig)
         ax.set_xlabel("Value")

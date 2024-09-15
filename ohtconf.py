@@ -145,6 +145,7 @@ LOGSTEP_FILES = 10  # progressive logging step of files
 
 # calculating
 DATAPOINT_INTERVAL = 0.1  # data point inerval in second
+
 OUTLIER_INTERVAL = 5  # outlier interval in second
 assert (
     DATAPOINT_INTERVAL < OUTLIER_INTERVAL
@@ -155,7 +156,7 @@ OUTLIER_RATIO = 2 / 6  # normal : outlier = 6 : 2, 1/3
 POINTS = {
     "PATTERN": round(1 / DATAPOINT_INTERVAL * OUTLIER_INTERVAL)  # ex,  50 = (1/0.1 * 5), outlier pattern range points
 }
-POINTS["MOVING"] = POINTS["PATTERN"] * 12  # ex, 600= 60 * 12, x times of pattern points for moving avg.
+POINTS["MOVING"] = POINTS["PATTERN"] * 12  # ex, 1 min, 50 / sec * 12 = 600 points for moving avg.
 
 assert (
     POINTS["PATTERN"] < POINTS["MOVING"]
@@ -186,7 +187,7 @@ CHARTSLICE = slice(
 )  # ex)  (600, 500, 1), adjust start,stop,step. exclude initial moving window. 5 patterns
 assert CHARTSLICE.stop > CHARTSLICE.start, f"conf, CHARTSLICE={CHARTSLICE} invalid"
 
-BINS = 10  # histogram bins
+BINS = 30  # histogram bins
 
 COLORS = ["red", "blue", "green", "yellow", "orange", "purple", "black", "gray", "pink", "brown"]  # 10 colors in a plot
 

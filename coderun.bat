@@ -31,24 +31,24 @@ if not exist ".\tmp" mkdir ".\tmp"
 time /t
 if "%1"=="" (
     :: jupyter nbconvert --to notebook --execute oht1parse.ipynb  --output .\tmp\oht1parse-%NAMEPART%.ipynb
-    papermill oht1parse.ipynb  .\tmp\oht1parse-%NAMEPART%.ipynb
+    papermill oht1parse.ipynb  .\tmp\oht1parse-%NAMEPART%-%DIRFLAG%.ipynb
     
     time /t
-    papermill oht2output.ipynb .\tmp\oht2output-%NAMEPART%.ipynb
+    papermill oht2output.ipynb .\tmp\oht2output-%NAMEPART%-%DIRFLAG%.ipynb
 
     time /t
-    papermill oht3graph.ipynb  .\tmp\oht3graph-%NAMEPART%.ipynb
-    jupyter nbconvert --to html .\tmp\oht3graph-%NAMEPART%.ipynb
+    papermill oht3graph.ipynb  .\tmp\oht3graph-%NAMEPART%-%DIRFLAG%.ipynb
+    jupyter nbconvert --to html .\tmp\oht3graph-%NAMEPART%-%DIRFLAG%.ipynb
 ) else (
     if "%1"=="parse" (
-        papermill oht1parse.ipynb  .\tmp\oht1parse-%NAMEPART%.ipynb
+        papermill oht1parse.ipynb  .\tmp\oht1parse-%NAMEPART%-%DIRFLAG%.ipynb
     ) else (
         if "%1"=="output" (
-            papermill oht2output.ipynb .\tmp\oht2output-%NAMEPART%.ipynb
+            papermill oht2output.ipynb .\tmp\oht2output-%NAMEPART%-%DIRFLAG%.ipynb
         ) else (
             if "%1"=="graph" (
-                papermill oht3graph.ipynb  .\tmp\oht3graph-%NAMEPART%.ipynb
-                jupyter nbconvert --to html .\tmp\oht3graph-%NAMEPART%.ipynb
+                papermill oht3graph.ipynb  .\tmp\oht3graph-%NAMEPART%-%DIRFLAG%.ipynb
+                jupyter nbconvert --to html .\tmp\oht3graph-%NAMEPART%-%DIRFLAG%.ipynb
             ) else (
                 if "%1"=="clear" (
                     jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace *.ipynb
