@@ -46,6 +46,19 @@ def make_chartargs(
     return dfs, labels, cols, grid, title, figsize
 
 
+def columnbase(col: str) -> str:
+    tokens = col.split("_")
+    if len(tokens) == 1:  # TEM, PM1,...
+        colbase = col
+    elif len(tokens) == 2:  # MVAVG_TEM,...
+        colbase = tokens[1]
+    elif len(tokens) == 3:  # MVAVG_PM2_5
+        colbase = "_".join(tokens[1:])
+    else:
+        assert False, "Invalid column name={col} as too many _"
+    return colbase
+
+
 def calc_lowhigh(dfs: list[pd.DataFrame], cols: list[str]) -> tuple[np.int16 | np.float32, np.int16 | np.float32]:
     """Calculate dataframe column values mix and max"""
     colranges: dict[str, list[np.float32 | np.int16]] = dict()
@@ -57,7 +70,8 @@ def calc_lowhigh(dfs: list[pd.DataFrame], cols: list[str]) -> tuple[np.int16 | n
                 colranges[col] = [df[col].min(), df[col].max()]
 
     for col in cols:
-        if col in conf.COLUMN_PMA + conf.COLUMN_COA:
+        colbase = columnbase(col)
+        if colbase in conf.COLUMN_PMA + conf.COLUMN_COA:
             colranges[col] = [np.int16(colranges[col][0]) - 1, np.int16(colranges[col][1]) + 1]
         else:
             colranges[col] = [np.float32(np.floor(colranges[col][0]) - 1), np.float32(np.ceil(colranges[col][1])) + 1]
@@ -114,14 +128,17 @@ def linechart(
             ax.plot(
                 range(1, len(df) + 1), df[col], color=conf.COLORS[ik % len(conf.COLORS)], label=labels[ik] + "-" + col
             )
-        if col not in conf.COLUMN_COA:  # too difference range between CO and NH3
+        if columnbase(col) not in conf.COLUMN_COA:  # too difference range between CO and NH3
             ax.set_ylim(low, hig)
         ax.set_ylabel(col)
-        ax.set_xlabel("0.1 sec")
+        if col == columnbase(col):
+            ax.set_xlabel("0.1 sec")
+        else:  # MVAVG_
+            ax.set_xlabel(f"{conf.POINTS['MOVING'] * 0.1} sec")
         ax.set_title(col)
         ax.legend(loc="lower right", bbox_to_anchor=(1, 0))
 
-        if col in conf.COLUMN_PMA + conf.COLUMN_COA:
+        if columnbase(col) in conf.COLUMN_PMA + conf.COLUMN_COA:
             # Use FormatStrFormatter for y-axis to display as integers
             ax.yaxis.set_major_formatter(FormatStrFormatter("%d"))
         else:

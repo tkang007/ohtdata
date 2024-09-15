@@ -162,10 +162,10 @@ assert (
 ), f"conf. MOVING={POINTS['MOVING']} points shoud greater than PATTERN={POINTS['PATTERN']}"
 
 SIGMA_NOISE = 2  # max sigma value for noise detection. adjust value to increase or decrease noise range
-assert 1 < SIGMA_NOISE < 6, f"conf, SIGMA_SOISE={SIGMA_NOISE} invalid"
+assert 1 < SIGMA_NOISE < 6, f"conf, SIGMA_NOISE={SIGMA_NOISE} invalid"
 
 SIGMA_OUTLIER = 6  # max sigma value for outerlier generation. adjust value to increase or decrease outlier value range
-assert 2 < SIGMA_OUTLIER < 9, f"conf, SIGMA_SOISE={SIGMA_OUTLIER} invalid"
+assert 2 < SIGMA_OUTLIER < 9, f"conf, SIGMA_NOISE={SIGMA_OUTLIER} invalid"
 
 MVAVG = "MVAVG_"  # column name prefix for moving average
 MVSTD = "MVSTD_"  # moving stddev
@@ -195,6 +195,8 @@ COLORS = ["red", "blue", "green", "yellow", "orange", "purple", "black", "gray",
 
 PLOTSIZE = [7, 5]  # recommended plotsize on the notbook.  width, height in pixel
 DPI = 300  # recommended DPI, density per inch on the file for document.
+
+SCATTER_INCLUDE = False  # flag for scatter chart generation
 
 # etc
 VERBOSE = True

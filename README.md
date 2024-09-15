@@ -2,7 +2,7 @@
 
 ## objective
 - find abnormal,outlier, noise data and report noise data file when found
-- geneate normal, outlier data 
+- geneate normal, outlier data and charts for trend, distribution and correlation.
 
 ## raw data
 - csv files in this folder: 
