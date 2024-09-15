@@ -2,6 +2,7 @@
 jupyterlab~=4.2.5 
 pandas~=2.2.2
 matplotlib~=3.9.2
+seaborn~=0.13.2
 humanfriendly~=10.0
 duckdb~=1.0.0
 

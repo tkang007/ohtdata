@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
+import seaborn as sns
 
 
 import ohtconf as conf
@@ -36,9 +37,9 @@ def make_chartargs(
 
     if title is None:
         if kind == "line":
-            title = "Data Trend with " + kind.capitalize() + " chart"
+            title = "Trend by " + kind.capitalize() + " chart"
         else:
-            title = "Data Distribution with " + kind.capitalize() + " chart"
+            title = "Distribution by " + kind.capitalize() + " chart"
 
     figsize = (conf.PLOTSIZE[0] * grid[1], conf.PLOTSIZE[1] * grid[0])
 
@@ -316,7 +317,7 @@ def scatterchart(
     assert len(cols) == 2, "scatterplot, second arg, cols must have 2 column names"
 
     if title is None:
-        title = "Data Correation with " + "Scatter chart"
+        title = "Correation by " + "Scatter chart"
 
     figsize = conf.PLOTSIZE
 
@@ -330,6 +331,48 @@ def scatterchart(
 
     fig.suptitle(title)
 
+    plt.tight_layout()
+    plt.show()
+
+    if pngfile is not None:
+        filepath = pathlib.Path(conf.DIRCHART) / pngfile
+        fig.savefig(
+            filepath,
+            dpi=conf.DPI,
+            facecolor="w",
+            edgecolor="w",
+            orientation="portrait",
+            format=None,
+            transparent=False,
+            bbox_inches=None,
+            pad_inches=None,
+        )
+
+
+def heatmapchart(df: pd.DataFrame, title: str | None = None, pngfile: str | None = None) -> None:
+    """display and save heatmap chart
+
+    Args:
+    df pd.DataFrame - a dataframe which has two column in cols
+    title str - tilte of chart
+    pngfile str - png filename
+    """
+
+    if title is None:
+        title = "Correation Matrix by Heatmap chart"
+
+    figsize = conf.PLOTSIZE
+
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+
+    # Compute the correlation matrix
+    corr_matrix = df.corr()
+
+    # Create the heatmap
+    sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", linewidths=0.5, fmt=".2f", ax=ax)
+    # ax.set_title("Heatmap of Correlatoin Matrix")
+
+    fig.suptitle(title)
     plt.tight_layout()
     plt.show()
 
