@@ -66,18 +66,16 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S:%f"  # 3 digits after second
 
 FLOAT_FORMAT = "%.1f"  # 1 digit after period
 
-# """Sample data statics to determine column max value:
-
-#         DATETM                        TEM       PM1       PM2_5     PM10      CO        NH3       CT1       CT2       CT3       CT4
-# count    360000                       360000.0  360000.0  360000.0  360000.0  360000.0  360000.0  360000.0  360000.0  360000.0  360000.0
-# mean    2024-07-29 14:43:18.669020    40.7      10.9      12.3      13.6      160.3     88.5      0.9       1.0       0.5       0.5
-# min     2024-07-29 09:43:18.696000    40.3       9.0      11.0      12.0      112.0     70.0      0.6       0.8       0.3       0.3
-# 25%     2024-07-29 12:13:18.694000    40.5      10.0      12.0      13.0      158.0     88.0      0.8       1.0       0.4       0.5
-# 50%     2024-07-29 14:43:18.671500    40.6      10.0      12.0      13.0      161.0     89.0      0.9       1.0       0.5       0.5
-# 75%     2024-07-29 17:13:18.644000    40.8      13.0      13.0      15.0      163.0     89.0      0.9       1.0       0.5       0.6
-# max     2024-07-29 19:43:18.619000    41.8      15.0      21.0      26.0      170.0     96.0      1.1       1.2       0.8       0.7
-# std     NaN                            0.2       1.4       0.5       1.0        3.6      1.7      0.1       0.1       0.1       0.1
-# """
+# 6M sample data's statistics for max values
+# 	   DATETM                         TEM        PM1        PM2_5      PM10       CO         NH3        CT1        CT2        CT3         CT4
+# count  6095021                        6095021.0  6095021.0  6095021.0  6095021.0  6095021.0  6095021.0  6095021.0  6095021.0  6095021.0   6095021.0
+# mean   2024-01-04 12:39:11.000005120  42.1       9.4        10.8       12.3       157.2      98.2        0.6       1.0        0.4         0.6
+# min    2024-01-01 00:00:00            22.6       7.0         8.0        9.0        31.0      66.0       -0.5       0.2        0.2         0.3
+# 25%    2024-01-02 18:19:35.500000     40.8       8.0         9.0       11.0       141.0      88.0        0.3       0.9        0.4         0.5
+# 50%    2024-01-04 12:39:11            41.7       9.0        11.0       12.0       158.0      93.0        0.6       1.0        0.4         0.6
+# 75%    2024-01-06 06:58:46.500000     43.5      10.0        12.0       13.0       170.0      110.0       0.9       1.0        0.5         0.6
+# max    2024-01-08 01:18:22            45.5      27.0        29.0       42.0       253.0      140.0       3.0       1.5        0.8         1.0
+# std    NaN                             1.7       1.6         1.6        1.5        28.8      12.4        0.3       0.1        0.1         0.1
 
 MAXVALS: dict[str, np.int16 | np.float32] = dict()
 for col in COLUMN_GRAPH:
@@ -86,25 +84,25 @@ for col in COLUMN_GRAPH:
             MAXVALS[col] = np.float32(50.0)
 
         case "PM1":
-            MAXVALS[col] = np.int16(30)
+            MAXVALS[col] = np.int16(50)
         case "PM2_5":
-            MAXVALS[col] = np.int16(30)
+            MAXVALS[col] = np.int16(50)
         case "PM10":
-            MAXVALS[col] = np.int16(30)
+            MAXVALS[col] = np.int16(50)
 
         case "CO":
-            MAXVALS[col] = np.int16(180)
+            MAXVALS[col] = np.int16(300)
         case "NH3":
-            MAXVALS[col] = np.int16(100)
+            MAXVALS[col] = np.int16(200)
 
         case "CT1":
-            MAXVALS[col] = np.float32(2.0)
+            MAXVALS[col] = np.float32(5.0)
         case "CT2":
-            MAXVALS[col] = np.float32(2.0)
+            MAXVALS[col] = np.float32(5.0)
         case "CT3":
-            MAXVALS[col] = np.float32(2.0)
+            MAXVALS[col] = np.float32(5.0)
         case "CT4":
-            MAXVALS[col] = np.float32(2.0)
+            MAXVALS[col] = np.float32(5.0)
         case _:
             assert False, f"conf, column={col} invalid"
 
@@ -197,7 +195,7 @@ COLORS = ["red", "blue", "green", "yellow", "orange", "purple", "black", "gray",
 PLOTSIZE = [7, 5]  # recommended plotsize on the notbook.  width, height in pixel
 DPI = 300  # recommended DPI, density per inch on the file for document.
 
-SCATTER_INCLUDE = False  # flag for scatter chart generation
+SCATTER_INCLUDE = True  # flag for scatter chart generation
 
 # etc
 VERBOSE = True

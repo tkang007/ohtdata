@@ -50,8 +50,11 @@ def columnbase(col: str) -> str:
     tokens = col.split("_")
     if len(tokens) == 1:  # TEM, PM1,...
         colbase = col
-    elif len(tokens) == 2:  # MVAVG_TEM,...
-        colbase = tokens[1]
+    elif len(tokens) == 2:  # PM2_5, MVAVG_TEM,
+        if len(tokens[1]) == 1:  # PM2_5
+            colbase = "_".join(tokens)
+        else:  # MVAVG_
+            colbase = tokens[1]
     elif len(tokens) == 3:  # MVAVG_PM2_5
         colbase = "_".join(tokens[1:])
     else:
@@ -151,6 +154,7 @@ def linechart(
     plt.show()  # fig.show not work at notebook as no event loop
 
     if pngfile is not None:
+        pngfile = pngfile.lower()
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
@@ -207,6 +211,7 @@ def histchart(
     plt.show()  # fig.show not work at notebook as no event loop
 
     if pngfile is not None:
+        pngfile = pngfile.lower()
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
@@ -255,6 +260,7 @@ def boxchart(
     plt.show()  # fig.show not work at notebook as no event loop
 
     if pngfile is not None:
+        pngfile = pngfile.lower()
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
@@ -292,6 +298,8 @@ def violinchart(
         for ik, df in enumerate(dfs):
             ax.violinplot(df[col], positions=[ik + 1])
 
+        for patch in ax.collections:
+            patch.set_alpha(0.5)  # reduce transparency
         ax.set_xticks([x + 1 for x in range(len(labels))])
         ax.set_xticklabels(labels)
         ax.set_title(col)
@@ -302,6 +310,7 @@ def violinchart(
     plt.show()
 
     if pngfile is not None:
+        pngfile = pngfile.lower()
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
@@ -334,14 +343,14 @@ def scatterchart(
     assert len(cols) == 2, "scatterplot, second arg, cols must have 2 column names"
 
     if title is None:
-        title = "Correation by " + "Scatter chart"
+        title = "Correlation by " + "Scatter chart"
 
     figsize = conf.PLOTSIZE
 
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
 
     # Create a scatter plot using the DataFrame
-    ax.scatter(data=df, x=cols[0], y=cols[1], marker="o", color=conf.COLORS[1])
+    ax.scatter(data=df, x=cols[0], y=cols[1], marker="o", alpha=0.5, s=10, color=conf.COLORS[1])
     ax.set_xlabel(cols[0])
     ax.set_ylabel(cols[1])
     ax.set_title(" & ".join(cols))
@@ -352,6 +361,7 @@ def scatterchart(
     plt.show()
 
     if pngfile is not None:
+        pngfile = pngfile.lower()
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
@@ -376,7 +386,7 @@ def heatmapchart(df: pd.DataFrame, title: str | None = None, pngfile: str | None
     """
 
     if title is None:
-        title = "Correation Matrix by Heatmap chart"
+        title = "Correlation Matrix by Heatmap chart"
 
     figsize = conf.PLOTSIZE
 
@@ -394,6 +404,7 @@ def heatmapchart(df: pd.DataFrame, title: str | None = None, pngfile: str | None
     plt.show()
 
     if pngfile is not None:
+        pngfile = pngfile.lower()
         filepath = pathlib.Path(conf.DIRCHART) / pngfile
         fig.savefig(
             filepath,
