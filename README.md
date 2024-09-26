@@ -9,6 +9,12 @@
 
 \\BlueServer\ntcsoft_ftp\AFP_Data(열화상x)\240819 AFP Data\apfLog*
 
+## report files
+```
+.\report\dataout\ohtchart  # chart files of report
+.\report\dataout\ohtoutl   # outlier files of report
+```
+
 ## developer guide
 
 ### python virtual environment 
@@ -41,7 +47,6 @@ mkdir sample && mkdir sample\dataraw
 .gitignore
 codecheck.bat
 coderun.bat
-example
 oht1parse.ipynb
 oht2output.ipynb
 oht3graph.ipynb
@@ -51,6 +56,7 @@ ohtgraph.py
 pyproject.toml
 README.md
 requirements.txt
+report/
 sample/
 
 ```
