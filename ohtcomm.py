@@ -355,12 +355,10 @@ def custom_sequence(start: np.int16 | np.float32, stop: np.int16 | np.float32, p
             sequence = np.log(sequence)
 
         case 3:  # quadratic, slop depend on coefficent (a,b,c)
-            a, b, c = 3, 2, 1
-            sequence = a * sequence**2 + b * sequence + c
+            sequence = sequence**2
 
         case _:  # cubic
-            a, b, c, d = 4, 3, 2, 1
-            sequence = a * sequence**3 + b * sequence**2 + c * sequence + d
+            sequence = sequence**3
 
     sequence = start + (stop - start) * (sequence - sequence.min()) / (sequence.max() - sequence.min())
     return sequence.astype(np.float32)
@@ -379,9 +377,9 @@ def update_row_outer(df: pd.DataFrame, usestd: bool = False) -> Any:
         nonlocal outl_cnt
         # nonlocal des # not assign, but reference
 
-        repidx, patidx = divmod(row.name, conf.POINTS["PATTERN"])  # default index, 50
+        _, patidx = divmod(row.name, conf.POINTS["PATTERN"])  # default index, 50
         if patidx == 0 or len(sequences) == 0:  # as row.name is logical index
-            patkind = random.randint(0, repidx)  # random patten order
+            patkind = random.randint(0, conf.POINTS["PATTERN"])  # random patten order
             for colidx, col in enumerate(conf.COLUMN_GRAPH):  # use moving avg,std for row
                 if usestd:  # when use stddev
                     if row[conf.MVSTD + col] == 0:  # note: it happened
