@@ -15,7 +15,8 @@ if _dirflag == "small":
     DIROUT = r".\sample\dataout"
 else:  # prod
     DIRRAW = r"C:\projects\ohtdatafiles\dataraw"
-    DIROUT = r"C:\projects\ohtdatafiles\dataout"
+    # DIROUT = r"C:\projects\ohtdatafiles\dataout"
+    DIROUT = r".\report\dataout"
 
 assert pathlib.Path(DIRRAW).exists(), f"conf, DIRRAW={DIRRAW} dir not exist"
 
