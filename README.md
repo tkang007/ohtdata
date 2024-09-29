@@ -11,10 +11,10 @@
 
 ## report files
 ```
-.\report\dataout\ohtchart  # chart csv files
-.\report\dataout\ohtoutl   # outlier csv files
-.\report\dataout\ohtmix    # normal + outlier mixed files
-.\report\html              # notebook executed result html files
+.\report\dataout\ohtchart  # various chart files
+.\report\dataout\ohtoutl   # outlier csv files. not include normal data
+.\report\dataout\ohtmix    # normal + outlier mixed files. the last additional column flag INT to mark outlier. 0 for normal, 1~10 for column ordered outlier label
+.\report\html              # notebook executed result html files for KNN reports
 ```
 
 ## developer guide
@@ -52,6 +52,7 @@ coderun.bat
 oht1parse.ipynb
 oht2output.ipynb
 oht3graph.ipynb
+oht4knn.ipynb
 ohtcomm.py
 ohtconf.py
 ohtgraph.py

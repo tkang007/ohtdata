@@ -398,9 +398,9 @@ def update_row_outer(df: pd.DataFrame, usestd: bool = False) -> Any:
             for col in conf.COLUMN_GRAPH:
                 if col != colnam:  # take max(val,mean) for non-outlier column
                     if col in conf.COLUMN_PMA + conf.COLUMN_COA:
-                        row[col] = np.int16(max(row[col], np.around(des.loc["mean", col])))
+                        row[col] = np.int16(np.around(np.random.uniform(des.loc["25%", col], des.loc["75%", col])))
                     else:
-                        row[col] = np.float32(max(row[col], np.around(des.loc["mean", col], 1)))
+                        row[col] = np.float32(np.around(np.random.uniform(des.loc["25%", col], des.loc["75%", col]), 1))
                 else:  # take outlier value for outlier column
                     if col in conf.COLUMN_PMA + conf.COLUMN_COA:
                         row[col] = np.int16(np.around(sequences[col][patidx]))
