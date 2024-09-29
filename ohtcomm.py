@@ -382,24 +382,30 @@ def update_row_outer(df: pd.DataFrame, usestd: bool = False) -> Any:
         if patidx == 0 or len(sequences) == 0:  # as row.name is logical index
             patkind = random.randint(0, conf.POINTS["PATTERN"])  # random patten order
             for colidx, col in enumerate(conf.COLUMN_GRAPH):  # use moving avg,std for row
-                if row[conf.MVSTD + col] == 0:  # note: it happened
-                    stddev = des.loc["std", col]
-                else:
-                    stddev = row[conf.MVSTD + col]
-                minval = row[conf.MVAVG + col] + stddev * conf.SIGMA_NOISE
-                # use stddev or maxval
-                maxval = row[conf.MVAVG + col] + stddev * conf.SIGMA_OUTLIER if usestd else conf.MAXVALS[col]
+                stddev = row[conf.MVSTD + col] if row[conf.MVSTD + col] != 0 else des.loc["std", col]
+                minval = row[conf.MVAVG + col] + stddev * conf.SIGMA_NOISE  # 2-sigma
+                maxval = (
+                    row[conf.MVAVG + col] + stddev * conf.SIGMA_OUTLIER if usestd else conf.MAXVALS[col]
+                )  # 6-sigmal or maxval
                 sequences[col] = custom_sequence(minval, maxval, patkind)
 
         # NOTE: when make all column outlier at the same row, their correlation coefficent will be broken.
         if conf.OUTLIER_DISCRETE:
-            # try to keep correlation coefficient
+            # try to keep correlation coefficient by updating one column outlier value, other with mean value
             colidx = repidx % len(conf.COLUMN_GRAPH)
-            col = conf.COLUMN_GRAPH[colidx]
-            if col in conf.COLUMN_PMA + conf.COLUMN_COA:
-                row[col] = np.int16(np.around(sequences[col][patidx]))
-            else:
-                row[col] = np.float32(np.around(sequences[col][patidx], 1))
+            colnam = conf.COLUMN_GRAPH[colidx]
+
+            for col in conf.COLUMN_GRAPH:
+                if col != colnam:  # take max(val,mean) for non-outlier column
+                    if col in conf.COLUMN_PMA + conf.COLUMN_COA:
+                        row[col] = np.int16(max(row[col], np.around(des.loc["mean", col])))
+                    else:
+                        row[col] = np.float32(max(row[col], np.around(des.loc["mean", col], 1)))
+                else:  # take outlier value for outlier column
+                    if col in conf.COLUMN_PMA + conf.COLUMN_COA:
+                        row[col] = np.int16(np.around(sequences[col][patidx]))
+                    else:
+                        row[col] = np.float32(np.around(sequences[col][patidx], 1))
 
             row[conf.COLUMN_FLAG] = colidx + 1  # for ML feature selection, use colidx in conf.COLUMN_GRAPH + 1
         else:
