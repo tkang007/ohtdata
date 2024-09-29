@@ -5,6 +5,7 @@ matplotlib~=3.9.2
 seaborn~=0.13.2
 humanfriendly~=10.0
 duckdb~=1.0.0
+scikit-learn~=1.5.2
 
 # dev only for lint and format 
 ruff~=0.6.4  

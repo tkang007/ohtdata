@@ -325,38 +325,30 @@ def violinchart(
         )
 
 
-def scatterchart(
-    df: pd.DataFrame,
-    cols: list[str],
-    title: str | None = None,
-    pngfile: str | None = None,
-) -> None:
-    """display and save scatter chart
+def heatmapchart(df: pd.DataFrame, title: str | None = None, pngfile: str | None = None) -> None:
+    """display and save heatmap chart
 
     Args:
     df pd.DataFrame - a dataframe which has two column in cols
-    cols list[str] - 2 column names in df
     title str - tilte of chart
     pngfile str - png filename
     """
-    assert isinstance(df, pd.DataFrame), "scatterplot, the first arg, df must be dataframe"
-    assert len(cols) == 2, "scatterplot, second arg, cols must have 2 column names"
 
     if title is None:
-        title = "Correlation by " + "Scatter chart"
+        title = "Correlation Matrix by Heatmap"
 
     figsize = conf.PLOTSIZE
 
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
 
-    # Create a scatter plot using the DataFrame
-    ax.scatter(data=df, x=cols[0], y=cols[1], marker="o", alpha=0.5, s=10, color=conf.COLORS[1])
-    ax.set_xlabel(cols[0])
-    ax.set_ylabel(cols[1])
-    ax.set_title(" & ".join(cols))
+    # Compute the correlation matrix
+    corr_matrix = df.corr()
+
+    # Create the heatmap
+    sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", linewidths=0.5, fmt=".2f", ax=ax)
+    # ax.set_title("Heatmap of Correlatoin Matrix")
 
     fig.suptitle(title)
-
     plt.tight_layout()
     plt.show()
 
@@ -376,30 +368,39 @@ def scatterchart(
         )
 
 
-def heatmapchart(df: pd.DataFrame, title: str | None = None, pngfile: str | None = None) -> None:
-    """display and save heatmap chart
+def scatterchart(
+    df: pd.DataFrame,
+    cols: list[str],
+    title: str | None = None,
+    pngfile: str | None = None,
+) -> None:
+    """display and save scatter chart
 
     Args:
     df pd.DataFrame - a dataframe which has two column in cols
+    cols list[str] - 2 column names in df
     title str - tilte of chart
     pngfile str - png filename
     """
+    assert isinstance(df, pd.DataFrame), "scatterplot, the first arg, df must be dataframe"
+    assert len(cols) == 2, "scatterplot, second arg, cols must have 2 column names"
 
     if title is None:
-        title = "Correlation Matrix by Heatmap chart"
+        title = "Correlation Represent by Scatter chart"
 
     figsize = conf.PLOTSIZE
 
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
 
-    # Compute the correlation matrix
-    corr_matrix = df.corr()
-
-    # Create the heatmap
-    sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", linewidths=0.5, fmt=".2f", ax=ax)
-    # ax.set_title("Heatmap of Correlatoin Matrix")
+    # Create a scatter plot using the DataFrame
+    # ax.scatter(data=df, x=cols[0], y=cols[1], marker="o", alpha=0.5, s=10, color=conf.COLORS[1])
+    ax.scatter(df[cols[0]], df[cols[1]], marker="o", alpha=0.5, s=10, color=conf.COLORS[1])
+    ax.set_xlabel(cols[0])
+    ax.set_ylabel(cols[1])
+    ax.set_title(" & ".join(cols))
 
     fig.suptitle(title)
+
     plt.tight_layout()
     plt.show()
 

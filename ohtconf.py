@@ -9,7 +9,7 @@ import numpy as np
 #
 # basic config
 #
-_dirflag = os.getenv("DIRFLAG", "small")
+_dirflag = os.getenv("DIRFLAG", "small")  # increase will be used when increase small dataset to large dataset at output
 if _dirflag == "small":
     DIRRAW = r".\sample\dataraw"
     DIROUT = r".\sample\dataout"
@@ -68,7 +68,7 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S:%f"  # 3 digits after second
 FLOAT_FORMAT = "%.1f"  # 1 digit after period
 
 # 6M sample data's statistics for max values
-# 	   DATETM                         TEM        PM1        PM2_5      PM10       CO         NH3        CT1        CT2        CT3         CT4
+# 	   DATETM                         TEM          PM1        PM2_5      PM10       CO         NH3        CT1        CT2        CT3         CT4
 # count  6095021                        6095021.0  6095021.0  6095021.0  6095021.0  6095021.0  6095021.0  6095021.0  6095021.0  6095021.0   6095021.0
 # mean   2024-01-04 12:39:11.000005120  42.1       9.4        10.8       12.3       157.2      98.2        0.6       1.0        0.4         0.6
 # min    2024-01-01 00:00:00            22.6       7.0         8.0        9.0        31.0      66.0       -0.5       0.2        0.2         0.3
@@ -118,18 +118,20 @@ TABNAME_RAW = "ohtraw"  # raw
 TABNAME_NORM = "ohtnorm"  # normal
 TABNAME_NOISE = "ohtnoise"  # noise
 TABNAME_OUTL = "ohtoutl"  # outlier
+TABNAME_MIX = "ohtmix"  # normal + outlier for ML
 
 # FILENAME_RAW = TABNAME_RAW + '.csv'  # raw
 FILENAME_NORM = TABNAME_NORM + ".csv"  # normal
 FILENAME_NOISE = TABNAME_NOISE + ".csv"  # noise
 FILENAME_OUTL = TABNAME_OUTL + ".csv"  # outlier
+FILENAME_MIX = TABNAME_MIX + ".csv"  # normal + outlier for ML
 
 # parsing
 DBFILE_RECREATE = True  # flag for recreating dbfile. True when change input data or its scope.
 
 DATETM_INCLUDE = True  # include or exclude datetm column oon the output report csvfile.
 
-if DATETM_INCLUDE:  #
+if DATETM_INCLUDE:
     INPUT_MAXSIZE = 400 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
 else:
     INPUT_MAXSIZE = 650 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
@@ -150,12 +152,15 @@ assert (
     DATAPOINT_INTERVAL < OUTLIER_INTERVAL
 ), f"conf, OUTLIER_INTERVAL={OUTLIER_INTERVAL} should be greater than DATAPOINT_INTERVAL={DATAPOINT_INTERVAL}"
 
-OUTLIER_RATIO = 2 / 6  # normal : outlier = 6 : 2, 1/3
+OUTLIER_RATIO = 2 / 8  # normal : outlier = 6 : 2 (3 : 1)
+
+OUTLIER_DISCRETE = True  # each columns's outlier is on the different row. True for ML and False for not enough outlier displayed for mix data chart.
 
 POINTS = {
     "PATTERN": round(1 / DATAPOINT_INTERVAL * OUTLIER_INTERVAL)  # ex,  50 = (1/0.1 * 5), outlier pattern range points
 }
 POINTS["MOVING"] = POINTS["PATTERN"] * 12  # ex, 1 min, 50 / sec * 12 = 600 points for moving avg.
+# POINTS["MOVING"] = POINTS["PATTERN"] * 12 * 60  # ex, 1 hour, 50 / sec * 12 * 60 = 36000 points for moving avg. more flatten
 
 assert (
     POINTS["PATTERN"] < POINTS["MOVING"]
@@ -182,7 +187,9 @@ assert CSVFILE_LINES > 0, f"conf, CSVFILE_LINES={CSVFILE_LINES} invalid"
 DIRCHART = str(pathlib.Path(DIROUT) / "ohtchart")
 
 CHARTSLICE = slice(
-    POINTS["MOVING"], POINTS["MOVING"] + POINTS["PATTERN"] * 10, 1
+    POINTS["MOVING"],
+    POINTS["MOVING"] + POINTS["PATTERN"] * 20,  # line chart x-axis count
+    1,
 )  # ex)  (600, 500, 1), adjust start,stop,step. exclude initial moving window. 5 patterns
 assert CHARTSLICE.stop > CHARTSLICE.start, f"conf, CHARTSLICE={CHARTSLICE} invalid"
 
@@ -197,6 +204,11 @@ PLOTSIZE = [7, 5]  # recommended plotsize on the notbook.  width, height in pixe
 DPI = 300  # recommended DPI, density per inch on the file for document.
 
 SCATTER_INCLUDE = True  # flag for scatter chart generation
+
+MIX_INCLUDE = False  # flag for mixed data charting
+
+# KNN
+N_NEIGHBORS = range(2, 9)  # note: best 5 in (1,20)
 
 # etc
 VERBOSE = True

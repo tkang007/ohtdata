@@ -289,7 +289,8 @@ def save_csvfile(df: pd.DataFrame, filename: str, adir: str) -> None:
                 if line != 0:
                     of.write("\n")
                 line += 1
-                for col in conf.COLUMN_NAMES:
+                # for col in conf.COLUMN_NAMES:
+                for col in df.columns:  # for FLAG column
                     if col == conf.COLUMN_NAMES[0]:
                         if conf.DATETM_INCLUDE:
                             of.write(row[col].strftime(conf.DATE_FORMAT)[:-3])
@@ -300,7 +301,7 @@ def save_csvfile(df: pd.DataFrame, filename: str, adir: str) -> None:
                             of.write("{:.1f}".format(row[col]))
                         else:
                             of.write(",{:.1f}".format(row[col]))
-                    elif col in conf.COLUMN_PMA + conf.COLUMN_COA:
+                    elif col in conf.COLUMN_PMA + conf.COLUMN_COA + ["FLAG"]:
                         of.write(",{:d}".format(row[col]))
 
         cnt = cnt + 1
@@ -377,27 +378,40 @@ def update_row_outer(df: pd.DataFrame, usestd: bool = False) -> Any:
         nonlocal outl_cnt
         # nonlocal des # not assign, but reference
 
-        _, patidx = divmod(row.name, conf.POINTS["PATTERN"])  # default index, 50
+        repidx, patidx = divmod(row.name, conf.POINTS["PATTERN"])  # default index, 50
         if patidx == 0 or len(sequences) == 0:  # as row.name is logical index
             patkind = random.randint(0, conf.POINTS["PATTERN"])  # random patten order
             for colidx, col in enumerate(conf.COLUMN_GRAPH):  # use moving avg,std for row
-                if usestd:  # when use stddev
-                    if row[conf.MVSTD + col] == 0:  # note: it happened
-                        stddev = des.loc["std", col]
-                    else:
-                        stddev = row[conf.MVSTD + col]
-                    sequences[col] = custom_sequence(
-                        row[conf.MVAVG + col], row[conf.MVAVG + col] + stddev * conf.SIGMA_OUTLIER, patkind
-                    )
-                else:  # when use maxvals
-                    sequences[col] = custom_sequence(row[conf.MVAVG + col], conf.MAXVALS[col], patkind)
-        for col in conf.COLUMN_GRAPH:
+                if row[conf.MVSTD + col] == 0:  # note: it happened
+                    stddev = des.loc["std", col]
+                else:
+                    stddev = row[conf.MVSTD + col]
+                minval = row[conf.MVAVG + col] + stddev * conf.SIGMA_NOISE
+                # use stddev or maxval
+                maxval = row[conf.MVAVG + col] + stddev * conf.SIGMA_OUTLIER if usestd else conf.MAXVALS[col]
+                sequences[col] = custom_sequence(minval, maxval, patkind)
+
+        # NOTE: when make all column outlier at the same row, their correlation coefficent will be broken.
+        if conf.OUTLIER_DISCRETE:
+            # try to keep correlation coefficient
+            colidx = repidx % len(conf.COLUMN_GRAPH)
+            col = conf.COLUMN_GRAPH[colidx]
             if col in conf.COLUMN_PMA + conf.COLUMN_COA:
                 row[col] = np.int16(np.around(sequences[col][patidx]))
             else:
                 row[col] = np.float32(np.around(sequences[col][patidx], 1))
 
-        row[conf.COLUMN_FLAG] = 1
+            row[conf.COLUMN_FLAG] = colidx + 1  # for ML feature selection, use colidx in conf.COLUMN_GRAPH + 1
+        else:
+            # large impoct on the correlation heatmap, scatter
+            for col in conf.COLUMN_GRAPH:
+                if col in conf.COLUMN_PMA + conf.COLUMN_COA:
+                    row[col] = np.int16(np.around(sequences[col][patidx]))
+                else:
+                    row[col] = np.float32(np.around(sequences[col][patidx], 1))
+
+            row[conf.COLUMN_FLAG] = -1  # negate when ML
+
         outl_cnt += 1
 
         if (outl_cnt - 1) % 100_000 == 0:
