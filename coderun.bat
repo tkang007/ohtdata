@@ -25,36 +25,50 @@ set SECOND=%TIME:~6,2%
 if "%HOUR:~0,1%" == " " set HOUR=0%HOUR:~1,1%
 set NAMEPART=%HOUR%%MINUTE%%SECOND%
 
-:: Create subdirectory ./tmp
+:: Create subdirectories for output files
 if not exist ".\tmp" mkdir ".\tmp"
+if not exist ".\report" mkdir ".\report"
+if not exist ".\report\html" mkdir ".\report\html"
 
 time /t
 if "%1"=="" (
-    :: jupyter nbconvert --to notebook --execute oht1parse.ipynb  --output .\tmp\oht1parse-%NAMEPART%.ipynb
-    papermill oht1parse.ipynb  .\tmp\oht1parse-%NAMEPART%-%DIRFLAG%.ipynb
-    
-    time /t
-    papermill oht2output.ipynb .\tmp\oht2output-%NAMEPART%-%DIRFLAG%.ipynb
+    papermill oht1parse.ipynb  .\tmp\oht1parse-%DIRFLAG%.ipynb
+    jupyter nbconvert --to html .\tmp\oht1parse-%DIRFLAG%.ipynb --output=..\report\html\oht1parse-%DIRFLAG%.html
 
     time /t
-    papermill oht3graph.ipynb  .\tmp\oht3graph-%NAMEPART%-%DIRFLAG%.ipynb
-    jupyter nbconvert --to html .\tmp\oht3graph-%NAMEPART%-%DIRFLAG%.ipynb
+    papermill oht2output.ipynb .\tmp\oht2output-%DIRFLAG%.ipynb
+    jupyter nbconvert --to html .\tmp\oht2output-%DIRFLAG%.ipynb --output=..\report\html\oht2output-%DIRFLAG%.html
+
+    time /t
+    papermill oht3graph.ipynb  .\tmp\oht3graph-%DIRFLAG%.ipynb
+    jupyter nbconvert --to html .\tmp\oht3graph-%DIRFLAG%.ipynb --output=..\report\html\oht3graph-%DIRFLAG%.html
+    
+    time /t
+    papermill oht4knn.ipynb  .\tmp\oht4knn-%DIRFLAG%.ipynb
+    jupyter nbconvert --to html .\tmp\oht4knn-%DIRFLAG%.ipynb --output=..\report\html\oht4knn-%DIRFLAG%.html
 ) else (
     if "%1"=="parse" (
-        papermill oht1parse.ipynb  .\tmp\oht1parse-%NAMEPART%-%DIRFLAG%.ipynb
+        papermill oht1parse.ipynb  .\tmp\oht1parse-%DIRFLAG%.ipynb
+        jupyter nbconvert --to html .\tmp\oht1parse-%DIRFLAG%.ipynb --output=..\report\html\oht1parse-%DIRFLAG%.html
     ) else (
         if "%1"=="output" (
-            papermill oht2output.ipynb .\tmp\oht2output-%NAMEPART%-%DIRFLAG%.ipynb
+            papermill oht2output.ipynb .\tmp\oht2output-%DIRFLAG%.ipynb
+            jupyter nbconvert --to html .\tmp\oht2output-%DIRFLAG%.ipynb --output=..\report\html\oht2output-%DIRFLAG%.html
         ) else (
             if "%1"=="graph" (
-                papermill oht3graph.ipynb  .\tmp\oht3graph-%NAMEPART%-%DIRFLAG%.ipynb
-                jupyter nbconvert --to html .\tmp\oht3graph-%NAMEPART%-%DIRFLAG%.ipynb
+                papermill oht3graph.ipynb  .\tmp\oht3graph-%DIRFLAG%.ipynb
+                jupyter nbconvert --to html .\tmp\oht3graph-%DIRFLAG%.ipynb --output=..\report\html\oht3graph-%DIRFLAG%.html
             ) else (
-                if "%1"=="clear" (
-                    jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace *.ipynb
+                if "%1"=="knn" (
+                    papermill oht4knn.ipynb  .\tmp\oht4knn-%DIRFLAG%.ipynb
+                    jupyter nbconvert --to html .\tmp\oht4knn-%DIRFLAG%.ipynb --output=..\report\html\oht4knn-%DIRFLAG%.html
                 ) else (
-                    echo "Invalud arg, support parse,output or graph"
-                    exit /b 1
+                    if "%1"=="clear" (
+                        jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace *.ipynb
+                    ) else (
+                        echo "Invalud arg, support parse,output,graph,knn or clear"
+                        exit /b 1
+                    )
                 )
             )
         )

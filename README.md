@@ -11,8 +11,10 @@
 
 ## report files
 ```
-.\report\dataout\ohtchart  # chart files of report
-.\report\dataout\ohtoutl   # outlier files of report
+.\report\dataout\ohtchart  # chart csv files
+.\report\dataout\ohtoutl   # outlier csv files
+.\report\dataout\ohtmix    # normal + outlier mixed files
+.\report\html              # notebook executed result html files
 ```
 
 ## developer guide

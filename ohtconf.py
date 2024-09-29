@@ -132,13 +132,11 @@ DBFILE_RECREATE = True  # flag for recreating dbfile. True when change input dat
 DATETM_INCLUDE = True  # include or exclude datetm column oon the output report csvfile.
 
 if DATETM_INCLUDE:
-    INPUT_MAXSIZE = 400 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
+    INPUT_MAXSIZE = 550 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
 else:
-    INPUT_MAXSIZE = 650 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
+    INPUT_MAXSIZE = 750 * 1024 * 1024  # parsed csvfile max size as expected normal data 400,
 
 REPORT_MINSIZE = 500 * 1024 * 1024  # required output csvfiles (normal+outler) size.
-# report files (normal, 374MB + outlier, 126 MBfor INPUT_MAXSIZE = 400MB, when include DATETM in output csvfile)
-# report files (normal, 380MB + outlier, 128 MBfor INPUT_MAXSIZE = 6500MB, when exclude DATETM in output csvfile)
 
 SKIP_FILES = 0  # skip files in the dataset dir in filename order. 0 or None for no skip
 LIMIT_FILES = 0  # limit files in the dataset dir in filename order. 0 or None for no limit
@@ -209,6 +207,7 @@ MIX_INCLUDE = False  # flag for mixed data charting
 
 # KNN
 N_NEIGHBORS = range(2, 9)  # note: best 5 in (1,20)
+TRAIN_SIZE = 800_000
 
 # etc
 VERBOSE = True

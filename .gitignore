@@ -3,6 +3,5 @@ __pycache__
 .*
 *.duckdb
 sample/dataout
-report/dataout/ohtnoise
 report/dataout/ohtnorm
 tmp
