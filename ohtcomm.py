@@ -365,7 +365,7 @@ def custom_sequence(start: np.int16 | np.float32, stop: np.int16 | np.float32, p
     return sequence.astype(np.float32)
 
 
-def update_row_outer(df: pd.DataFrame, usestd: bool = False) -> Any:
+def update_row_outer(df: pd.DataFrame) -> Any:
     """Return closure for update outlier row"""
 
     sequences: dict[str, NDArray[Any]] = dict()
@@ -379,56 +379,66 @@ def update_row_outer(df: pd.DataFrame, usestd: bool = False) -> Any:
         # nonlocal des # not assign, but reference
 
         repidx, patidx = divmod(row.name, conf.POINTS["PATTERN"])  # default index, 50
-        if patidx == 0 or len(sequences) == 0:  # as row.name is logical index
-            patkind = random.randint(0, conf.POINTS["PATTERN"])  # random patten order
-            for colidx, col in enumerate(conf.COLUMN_GRAPH):  # use moving avg,std for row
-                stddev = row[conf.MVSTD + col] if row[conf.MVSTD + col] != 0 else des.loc["std", col]
-                minval = row[conf.MVAVG + col] + stddev * conf.SIGMA_NOISE  # 2-sigma
-                maxval = (
-                    row[conf.MVAVG + col] + stddev * conf.SIGMA_OUTLIER if usestd else conf.MAXVALS[col]
-                )  # 6-sigmal or maxval
-                sequences[col] = custom_sequence(minval, maxval, patkind)
 
         # NOTE: when make all column outlier at the same row, their correlation coefficent will be broken.
         if conf.OUTLIER_DISCRETE:
-            # try to keep correlation coefficient by updating one column outlier value, other with mean value
+            # try to keep correlation coefficient by updating one column outlier value, other with random value between 25%~75%
             colidx = repidx % len(conf.COLUMN_GRAPH)
             colnam = conf.COLUMN_GRAPH[colidx]
 
+            if patidx == 0 or colnam not in sequences.keys():  # as row.name is logical index
+                patkind = random.randint(0, conf.POINTS["PATTERN"])  # random patten order
+                stddev = row[conf.MVSTD + colnam] if row[conf.MVSTD + colnam] != 0 else des.loc["std", colnam]
+                minval = row[conf.MVAVG + colnam] + stddev * conf.SIGMA_NOISE  # 2-sigma
+                maxval = row[conf.MVAVG + colnam] + (
+                    stddev * conf.SIGMA_OUTLIER if conf.USESTDDEV else conf.MAXVALS[colnam]
+                )  # 6-sigmal or maxval
+                sequences[colnam] = custom_sequence(minval, maxval, patkind)
+
             for col in conf.COLUMN_GRAPH:
-                if col != colnam:  # take max(val,mean) for non-outlier column
-                    if col in conf.COLUMN_PMA + conf.COLUMN_COA:
-                        row[col] = np.int16(np.around(np.random.uniform(des.loc["25%", col], des.loc["75%", col])))
-                    else:
-                        row[col] = np.float32(np.around(np.random.uniform(des.loc["25%", col], des.loc["75%", col]), 1))
-                else:  # take outlier value for outlier column
+                if col == colnam:  # take outlier value for outlier column
                     if col in conf.COLUMN_PMA + conf.COLUMN_COA:
                         row[col] = np.int16(np.around(sequences[col][patidx]))
                     else:
                         row[col] = np.float32(np.around(sequences[col][patidx], 1))
+                else:  # take max(val,mean) for non-outlier column
+                    if col in conf.COLUMN_PMA + conf.COLUMN_COA:
+                        row[col] = np.int16(np.around(np.random.uniform(des.loc["25%", col], des.loc["75%", col])))
+                    else:
+                        row[col] = np.float32(np.around(np.random.uniform(des.loc["25%", col], des.loc["75%", col]), 1))
 
             row[conf.COLUMN_FLAG] = colidx + 1  # for ML feature selection, use colidx in conf.COLUMN_GRAPH + 1
         else:
             # large impoct on the correlation heatmap, scatter
+            if patidx == 0 or len(sequences) == 0:  # as row.name is logical index
+                patkind = random.randint(0, conf.POINTS["PATTERN"])  # random patten order
+                for colidx, col in enumerate(conf.COLUMN_GRAPH):  # use moving avg,std for row
+                    stddev = row[conf.MVSTD + col] if row[conf.MVSTD + col] != 0 else des.loc["std", col]
+                    minval = row[conf.MVAVG + col] + stddev * conf.SIGMA_NOISE  # 2-sigma
+                    maxval = row[conf.MVAVG + col] + (
+                        stddev * conf.SIGMA_OUTLIER if conf.USESTDDEV else conf.MAXVALS[col]
+                    )  # 6-sigmal or maxval
+                    sequences[col] = custom_sequence(minval, maxval, patkind)
+
             for col in conf.COLUMN_GRAPH:
                 if col in conf.COLUMN_PMA + conf.COLUMN_COA:
                     row[col] = np.int16(np.around(sequences[col][patidx]))
                 else:
                     row[col] = np.float32(np.around(sequences[col][patidx], 1))
 
-            row[conf.COLUMN_FLAG] = -1  # negate when ML
+            row[conf.COLUMN_FLAG] = 1  # negate when ML
 
         outl_cnt += 1
 
         if (outl_cnt - 1) % 100_000 == 0:
-            print(f"outlier count={outl_cnt} / {des.loc['count', conf.COLUMN_NAMES[0]]}")
+            print(f"updated outlier count={outl_cnt} / {des.loc['count', conf.COLUMN_NAMES[0]]}")
 
         return row
 
     return update_row_inner
 
 
-def gen_outlier(df: pd.DataFrame, usestd: bool = False) -> pd.DataFrame:
+def gen_outlier(df: pd.DataFrame) -> pd.DataFrame:
     """Generate outlie dataframe
 
     Args:
