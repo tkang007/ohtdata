@@ -78,32 +78,34 @@ FLOAT_FORMAT = "%.1f"  # 1 digit after period
 # max    2024-01-08 01:18:22            45.5      27.0        29.0       42.0       253.0      140.0       3.0       1.5        0.8         1.0
 # std    NaN                             1.7       1.6         1.6        1.5        28.8      12.4        0.3       0.1        0.1         0.1
 
+USESTDDEV = False  # when False, use MAXVALS
+
 MAXVALS: dict[str, np.int16 | np.float32] = dict()
 for col in COLUMN_GRAPH:
     match col:
         case "TEM":
-            MAXVALS[col] = np.float32(50.0)
+            MAXVALS[col] = np.float32(62.5)  # consider to set value, max + 10 * std
 
         case "PM1":
-            MAXVALS[col] = np.int16(50)
+            MAXVALS[col] = np.int16(43)
         case "PM2_5":
-            MAXVALS[col] = np.int16(50)
+            MAXVALS[col] = np.int16(45)
         case "PM10":
-            MAXVALS[col] = np.int16(50)
+            MAXVALS[col] = np.int16(57)
 
         case "CO":
-            MAXVALS[col] = np.int16(300)
+            MAXVALS[col] = np.int16(501)
         case "NH3":
-            MAXVALS[col] = np.int16(200)
+            MAXVALS[col] = np.int16(202)
 
         case "CT1":
-            MAXVALS[col] = np.float32(5.0)
+            MAXVALS[col] = np.float32(6.0)
         case "CT2":
-            MAXVALS[col] = np.float32(5.0)
+            MAXVALS[col] = np.float32(2.5)
         case "CT3":
-            MAXVALS[col] = np.float32(5.0)
+            MAXVALS[col] = np.float32(1.8)
         case "CT4":
-            MAXVALS[col] = np.float32(5.0)
+            MAXVALS[col] = np.float32(2.0)
         case _:
             assert False, f"conf, column={col} invalid"
 
@@ -206,8 +208,8 @@ SCATTER_INCLUDE = True  # flag for scatter chart generation
 MIX_INCLUDE = False  # flag for mixed data charting
 
 # KNN
-N_NEIGHBORS = range(2, 12)  # time issue when extend
-TRAIN_SIZE = 800_000
+
+TRAIN_SIZE = 800_000  # minimum knn train+test dataset size
 
 # etc
 VERBOSE = True
