@@ -206,7 +206,7 @@ SCATTER_INCLUDE = True  # flag for scatter chart generation
 MIX_INCLUDE = False  # flag for mixed data charting
 
 # KNN
-N_NEIGHBORS = range(2, 9)  # note: best 5 in (1,20)
+N_NEIGHBORS = range(2, 12)  # time issue when extend
 TRAIN_SIZE = 800_000
 
 # etc
