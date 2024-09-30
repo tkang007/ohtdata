@@ -12,8 +12,8 @@
 ## report files
 ```
 .\report\dataout\ohtchart  # various chart files
-.\report\dataout\ohtoutl   # outlier csv files. not include normal data
-.\report\dataout\ohtmix    # normal + outlier mixed files. the last additional column flag INT to mark outlier. 0 for normal, 1~10 for column ordered outlier label
+.\report\dataout\ohtoutl   # only outlier csv files. the last additional column flag INT to mark column outlier with ordered column number (1~10)
+.\report\dataout\ohtmix    # normal + outlier intermingled datetime ordered mixed files. the last additional column flag INT to mark normal (0) and outlier (1~10)
 .\report\html              # notebook executed result html files for KNN reports
 ```
 
