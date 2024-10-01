@@ -211,6 +211,10 @@ MIX_INCLUDE = False  # flag for mixed data charting
 
 TRAIN_SIZE = 800_000  # minimum knn train+test dataset size
 
+USESCALE = False  # feature scaling. no big difference, but difficult to catch
+
+NEIGHBORS_BASE = 10  # when countv not given, use min(this, maxv - minv)
+
 # etc
 VERBOSE = True
 
