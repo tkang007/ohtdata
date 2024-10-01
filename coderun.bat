@@ -44,8 +44,8 @@ if "%1"=="" (
     jupyter nbconvert --to html .\tmp\oht3graph-%DIRFLAG%.ipynb --output=..\report\html\oht3graph-%DIRFLAG%.html
     
     time /t
-    papermill oht4knn.ipynb  .\tmp\oht4knn-%DIRFLAG%.ipynb
-    jupyter nbconvert --to html .\tmp\oht4knn-%DIRFLAG%.ipynb --output=..\report\html\oht4knn-%DIRFLAG%.html
+    papermill oht4knn.ipynb  .\tmp\oht4kml-%DIRFLAG%.ipynb
+    jupyter nbconvert --to html .\tmp\oht4kml-%DIRFLAG%.ipynb --output=..\report\html\oht4kml-%DIRFLAG%.html
 ) else (
     if "%1"=="parse" (
         papermill oht1parse.ipynb  .\tmp\oht1parse-%DIRFLAG%.ipynb
@@ -59,14 +59,14 @@ if "%1"=="" (
                 papermill oht3graph.ipynb  .\tmp\oht3graph-%DIRFLAG%.ipynb
                 jupyter nbconvert --to html .\tmp\oht3graph-%DIRFLAG%.ipynb --output=..\report\html\oht3graph-%DIRFLAG%.html
             ) else (
-                if "%1"=="knn" (
-                    papermill oht4knn.ipynb  .\tmp\oht4knn-%DIRFLAG%.ipynb
-                    jupyter nbconvert --to html .\tmp\oht4knn-%DIRFLAG%.ipynb --output=..\report\html\oht4knn-%DIRFLAG%.html
+                if "%1"=="kml" (
+                    papermill oht4kml.ipynb  .\tmp\oht4kml-%DIRFLAG%.ipynb
+                    jupyter nbconvert --to html .\tmp\oht4kml-%DIRFLAG%.ipynb --output=..\report\html\oht4kml-%DIRFLAG%.html
                 ) else (
                     if "%1"=="clear" (
                         jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace *.ipynb
                     ) else (
-                        echo "Invalud arg, support parse,output,graph,knn or clear"
+                        echo "Invalud arg, support parse,output,graph,kml or clear"
                         exit /b 1
                     )
                 )

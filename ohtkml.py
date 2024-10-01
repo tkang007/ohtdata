@@ -18,7 +18,6 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 
 import ohtconf as conf
 
-
 def make_strlabel(ay: pd.Series, intlabels: list[int] | None = None, strlabels: list[str] | None = None) -> pd.Series:
     """map int labels to str labels
 
