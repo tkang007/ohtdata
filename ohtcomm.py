@@ -23,7 +23,6 @@ pd.set_option("display.max_columns", None)  # Show all columns
 pd.set_option("display.width", 200)  # Adjust width to your preference (e.g., 200)
 # pd.set_option('display.max_colwidth', None)  # Adjust maximum column width
 
-
 # functions
 def get_multifiles_indir(adir: str, pat: str) -> list[str]:
     """get csv filenames in a directory
